@@ -1,3 +1,10 @@
+# Run locally
+
+```sh
+docker build -t frontend:latest .
+docker run -d -p 80:80 --name frontend frontend:latest
+```
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
