@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { useUser } from './UserContext';
 
 export default function LoginPage() {
-  const { userId, setUserId } = useUser();
+  const { userLogin, setUserLogin } = useUser();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -24,10 +24,10 @@ export default function LoginPage() {
       if (response.ok) {
         const data = await response.json();
         if (data.userId) {
-          setUserId(data.userId); // saving userId to context
+          setUserLogin(data.userId); // saving userLogin to context
           console.log('User logged in with ID:', data.userId);
         } else {
-          console.error('Error: No userId returned from the server');
+          console.error('Error: No userLogin returned from the server', data);
         }
       } else {
         console.error('Failed to log in. Please try again.');
@@ -42,7 +42,7 @@ export default function LoginPage() {
 
   return (
     <Card className="w-full max-w-md">
-      {userId ? (
+      {userLogin ? (
         <CardContent className="text-center">
           <p className="text-2xl font-bold text-green-500">Logged in!</p>
         </CardContent>

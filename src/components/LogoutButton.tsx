@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { useUser } from './UserContext';
 
 export default function LogoutButton() {
-  const { setUserId } = useUser();
+  const { setUserLogin } = useUser();
 
   const handleLogout = async () => {
     try {
@@ -14,7 +14,7 @@ export default function LogoutButton() {
       });
 
       if (response.ok) {
-        setUserId(null);
+        setUserLogin(null); // clear user login in context (and localStorage)
         console.log('User logged out successfully');
       } else {
         console.error('Failed to log out. Please try again.');

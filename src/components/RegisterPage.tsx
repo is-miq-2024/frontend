@@ -14,7 +14,7 @@ const formSchema = z.object({
 });
 
 export default function RegisterPage() {
-  const { setUserId } = useUser();
+  const { setUserLogin } = useUser();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ username: '', password: '' });
@@ -50,11 +50,11 @@ export default function RegisterPage() {
 
       if (response.ok) {
         const data = await response.json();
-        if (data.userId) {
-          setUserId(data.userId); // Save userId to context
-          console.log('User registered with ID:', data.userId);
+        if (data.userLogin) {
+          setUserLogin(data.userLogin); // save userLogin to context
+          console.log('User registered with ID:', data.userLogin);
         } else {
-          console.error('Error: No userId returned from the server');
+          console.error('Error: No userLogin returned from the server');
         }
       } else {
         console.error('Failed to register. Please try again.');
@@ -62,16 +62,13 @@ export default function RegisterPage() {
     } catch (error) {
       console.error('Error:', error);
     }
-
-    setUsername('');
-    setPassword('');
   };
 
   return (
     <Card className="w-full max-w-md">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">Регистрация</CardTitle>
-        <CardDescription>Придумайте логин и пароль</CardDescription>
+        <CardDescription>Введите логин и пароль для регистрации</CardDescription>
       </CardHeader>
       <form onSubmit={handleSubmit}>
         <CardContent className="space-y-4">
@@ -85,7 +82,7 @@ export default function RegisterPage() {
               required
               placeholder="Введите юзернейм"
             />
-            {errors.username && <p className="text-sm text-red-500">{errors.username}</p>}
+            {errors.username && <div className="text-red-500 text-xs">{errors.username}</div>}
           </div>
           <div className="space-y-2">
             <label htmlFor="password" className="text-sm font-medium">Пароль</label>
@@ -95,19 +92,13 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              placeholder="Enter your password"
+              placeholder="Введите пароль"
             />
-            {errors.password && <p className="text-sm text-red-500">{errors.password}</p>}
-            <ul className="text-xs text-gray-500 list-disc list-inside">
-              <li>Минимум 8 символов</li>
-              <li>Минимум одна буква нижнего регистра</li>
-              <li>Минимум одна буква верхнего регистра</li>
-              <li>Один специальный символ *(),.?":{}|&lt;&gt;)</li>
-            </ul>
+            {errors.password && <div className="text-red-500 text-xs">{errors.password}</div>}
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={!isValid}>
+          <Button type="submit" disabled={!isValid} className="w-full">
             Зарегистрироваться
           </Button>
         </CardFooter>
