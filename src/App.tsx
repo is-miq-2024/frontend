@@ -1,5 +1,8 @@
 import Header from './components/header'
 import Hero from './components/hero-section'
+import LoginPage from './components/LoginPage'
+import LogoutButton from './components/LogoutButton'
+import RegisterPage from './components/RegisterPage'
 import SearchSection from './components/search-section'
 
 function App() {
@@ -8,6 +11,9 @@ function App() {
       <Header />
       <Hero />
       <SearchSection />
+      <RegisterPage />
+      <LoginPage />
+      <LogoutButton />
     </div >
   )
 }
