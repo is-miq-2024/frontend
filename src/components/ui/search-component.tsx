@@ -1,5 +1,6 @@
 import { Search } from 'lucide-react'
 import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
   Select,
@@ -10,6 +11,14 @@ import {
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from 'react'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 
 export default function SearchComponent() {
   const [destination, setDestination] = useState('')
@@ -83,20 +92,20 @@ export default function SearchComponent() {
     }
   }
 
-  const getTravelType = (type: 'beach' | 'mountain' | 'city' | 'adventure') => {
-    switch (type) {
-      case 'beach':
-        return 'WALKING'
-      case 'mountain':
-        return 'HIKING'
-      case 'city':
-        return 'WALKING'
-      case 'adventure':
-        return 'CYCLING'
-      default:
-        return 'WALKING'
-    }
-  }
+  //const getTravelType = (type: 'beach' | 'mountain' | 'city' | 'adventure') => {
+  //  switch (type) {
+  //    case 'beach':
+  //      return 'WALKING'
+  //    case 'mountain':
+  //      return 'HIKING'
+  //    case 'city':
+  //      return 'WALKING'
+  //    case 'adventure':
+  //      return 'CYCLING'
+  //    default:
+  //      return 'WALKING'
+  //  }
+  //}
 
   const handleCheckboxChange = (value: number, setter: React.Dispatch<React.SetStateAction<number[]>>) => {
     setter(prev =>
@@ -187,26 +196,35 @@ export default function SearchComponent() {
       {searchResults.length > 0 && (
         <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Результаты поиска</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="flex flex-col gap-4">
             {searchResults.map((result) => (
-              <div key={result.id} className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
-                <h3 className="text-lg font-semibold mb-2">{result.title}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">{result.description}</p>
-                <p className="text-sm"><strong>Длительность:</strong> {result.durationInMinutes} мин</p>
-                <p className="text-sm"><strong>Сложность:</strong> {result.difficulty}/10</p>
-                <p className="text-sm"><strong>Рейтинг:</strong> {result.rate.toFixed(1)}/10</p>
-                <p className="text-sm"><strong>Тип:</strong> {result.types.join(', ')}</p>
-                {result.recommendations.length > 0 && (
-                  <div className="mt-2">
-                    <strong className="text-sm">Рекомендации:</strong>
-                    <ul className="list-disc list-inside text-sm">
-                      {result.recommendations.map((rec: string, index: number) => (
-                        <li key={index}>{rec}</li>
-                      ))}
-                    </ul>
+              <Card key={result.id} className="flex flex-col">
+                <CardHeader>
+                  <CardTitle>{result.title}</CardTitle>
+                  <CardDescription>{result.description}</CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="text-sm"><strong>Длительность:</strong> {result.durationInMinutes} мин</div>
+                    <div className="text-sm"><strong>Сложность:</strong> {result.difficulty}/10</div>
+                    <div className="text-sm"><strong>Рейтинг:</strong> {result.rate.toFixed(1)}/10</div>
+                    <div className="text-sm"><strong>Тип:</strong> {result.types.join(', ')}</div>
                   </div>
-                )}
-              </div>
+                  {result.recommendations.length > 0 && (
+                    <div>
+                      <strong className="text-sm">Рекомендации:</strong>
+                      <ul className="list-disc list-inside text-sm mt-2">
+                        {result.recommendations.map((rec: string, index: number) => (
+                          <li key={index}>{rec}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </CardContent>
+                <CardFooter className="flex justify-end">
+                  <Badge variant="outline">{result.types[0]}</Badge>
+                </CardFooter>
+              </Card>
             ))}
           </div>
         </div>
