@@ -5,6 +5,7 @@ import RegisterPage from './components/RegisterPage'
 import SearchSection from './components/search-section'
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import {DataForm} from "@/pages/DataForm.tsx";
+import {RoutePage} from "@/pages/RoutePage.tsx";
 
 
 function HomePage() {
@@ -37,6 +38,7 @@ function App() {
                     alignItems: 'center'
                 }}><RegisterPage /></div>}/>
                 <Route path="/create-route" element={<DataForm/>} />
+                <Route path="/route/:id" element={<RoutePage />} />
             </Routes>
         </Router>
     );

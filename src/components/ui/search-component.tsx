@@ -19,6 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import {useNavigate} from "react-router-dom";
 
 export default function SearchComponent() {
   const [destination, setDestination] = useState('')
@@ -28,6 +29,8 @@ export default function SearchComponent() {
   const [rate, setRate] = useState<number[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [searchResults, setSearchResults] = useState<any[]>([])
+
+  const navigate = useNavigate();
 
   const handleSearch = async () => {
     setIsLoading(true)
@@ -198,7 +201,7 @@ export default function SearchComponent() {
           <h2 className="text-2xl font-bold mb-4">Результаты поиска</h2>
           <div className="flex flex-col gap-4">
             {searchResults.map((result) => (
-              <Card key={result.id} className="flex flex-col">
+              <Card key={result.id} className="flex flex-col" onClick={() => navigate(`/route/${result.id}`)}>
                 <CardHeader>
                   <CardTitle>{result.title}</CardTitle>
                   <CardDescription>{result.description}</CardDescription>
