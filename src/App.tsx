@@ -1,21 +1,43 @@
 import Header from './components/header'
 import Hero from './components/hero-section'
 import LoginPage from './components/LoginPage'
-import LogoutButton from './components/LogoutButton'
 import RegisterPage from './components/RegisterPage'
 import SearchSection from './components/search-section'
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+
+
+function HomePage() {
+    return (
+        <div className="min-w-full min-h-[100dvh] flex flex-col items-center bg-white dark:bg-black">
+            <Header/>
+            <Hero/>
+            <SearchSection/>
+        </div>
+    );
+}
 
 function App() {
-  return (
-    <div className="min-w-full min-h-[100dvh] flex flex-col items-center bg-white dark:bg-black">
-      <Header />
-      <Hero />
-      <SearchSection />
-      <RegisterPage />
-      <LoginPage />
-      <LogoutButton />
-    </div >
-  )
+    return (
+        <Router>
+            <Routes>
+                <Route path="/" element={<HomePage/>}/>
+                <Route path="/login" element={<div style={{
+                    width: '100%',
+                    height: '100vh',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}><LoginPage/></div>}/>
+                <Route path="/registration" element={<div style={{
+                    width: '100%',
+                    height: '100vh',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}><RegisterPage /></div>}/>
+            </Routes>
+        </Router>
+    );
 }
 
 export default App

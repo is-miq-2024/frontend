@@ -3,11 +3,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { useUser } from './UserContext';
+import {useNavigate} from "react-router-dom";
 
 export default function LoginPage() {
   const { setUserLogin, setUserPassword } = useUser();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +31,7 @@ export default function LoginPage() {
           setUserLogin(username);
           setUserPassword(password);
           console.log('User logged in with ID:', data.userId);
+          navigate("/");
         } else {
           console.error('Error: No userLogin returned from the server', data);
         }

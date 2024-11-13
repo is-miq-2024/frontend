@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { useUser } from './UserContext';
+import {useNavigate} from "react-router-dom";
 
 const formSchema = z.object({
   username: z.string().min(5, 'Юзернейм должен содержать >5 символов'),
@@ -19,6 +20,8 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState({ username: '', password: '' });
   const [isValid, setIsValid] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const result = formSchema.safeParse({ username, password });
@@ -53,6 +56,7 @@ export default function RegisterPage() {
         if (data.userLogin) {
           setUserLogin(data.userLogin); // save userLogin to context
           console.log('User registered with ID:', data.userLogin);
+          navigate("/");
         } else {
           console.error('Error: No userLogin returned from the server');
         }
