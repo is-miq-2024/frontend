@@ -2,33 +2,47 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface UserContextType {
   userLogin: string | null;
-  setUserLogin: (id: string | null) => void;
+  userPassword: string | null;
+  setUserLogin: (login: string | null) => void;
+  setUserPassword: (password: string | null) => void;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [userLogin, setUserLogin] = useState<string | null>(null);
+  const [userPassword, setUserPassword] = useState<string | null>(null);
 
-  // load userlogin from localStorage
   useEffect(() => {
     const storedUserLogin = localStorage.getItem('userLogin');
-    if (storedUserLogin) {
-      setUserLogin(storedUserLogin);
-    }
+    const storedUserPassword = localStorage.getItem('userPassword');
+
+    if (storedUserLogin) setUserLogin(storedUserLogin);
+    if (storedUserPassword) setUserPassword(storedUserPassword);
+    console.log("UserLogin was taken from localhost:", userLogin)
+    console.log("UserPassword was taken from localhost:", userPassword)
   }, []);
 
-  // update localStorage whenever userLogin changes
   useEffect(() => {
     if (userLogin) {
       localStorage.setItem('userLogin', userLogin);
+      console.log("UserLogin was updated in localhost:", userLogin)
     } else {
       localStorage.removeItem('userLogin');
+      console.log("UserLogin was deleted in localhost")
     }
-  }, [userLogin]);
+
+    if (userPassword) {
+      localStorage.setItem('userPassword', userPassword);
+      console.log("UserPassword was saved in localstorage:", userPassword)
+    } else {
+      localStorage.removeItem('userPassword');
+      console.log("UserPassword was deleted from localstorage")
+    }
+  }, [userLogin, userPassword]);
 
   return (
-    <UserContext.Provider value={{ userLogin, setUserLogin }}>
+    <UserContext.Provider value={{ userLogin, userPassword, setUserLogin, setUserPassword }}>
       {children}
     </UserContext.Provider>
   );

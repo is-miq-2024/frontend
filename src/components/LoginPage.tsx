@@ -5,7 +5,7 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter }
 import { useUser } from './UserContext';
 
 export default function LoginPage() {
-  const { userLogin, setUserLogin } = useUser();
+  const { setUserLogin, setUserPassword } = useUser();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -20,11 +20,13 @@ export default function LoginPage() {
         },
         body: JSON.stringify({ login: username, password }),
       });
+      console.log("Sent to /login endpoint:", JSON.stringify({ login: username, password }))
 
       if (response.ok) {
         const data = await response.json();
         if (data.userId) {
-          setUserLogin(data.userId); // saving userLogin to context
+          setUserLogin(username);
+          setUserPassword(password);
           console.log('User logged in with ID:', data.userId);
         } else {
           console.error('Error: No userLogin returned from the server', data);
@@ -42,49 +44,41 @@ export default function LoginPage() {
 
   return (
     <Card className="w-full max-w-md">
-      {userLogin ? (
-        <CardContent className="text-center">
-          <p className="text-2xl font-bold text-green-500">Logged in!</p>
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold">Войти</CardTitle>
+        <CardDescription>Введите логин и пароль</CardDescription>
+      </CardHeader>
+      <form onSubmit={handleSubmit}>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <label htmlFor="username" className="text-sm font-medium">Юзернейм</label>
+            <Input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="Введите юзернейм"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="password" className="text-sm font-medium">Пароль</label>
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Введите пароль"
+            />
+          </div>
         </CardContent>
-      ) : (
-        <>
-          <CardHeader>
-            <CardTitle className="text-2xl font-bold">Войти</CardTitle>
-            <CardDescription>Введите логин и пароль</CardDescription>
-          </CardHeader>
-          <form onSubmit={handleSubmit}>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label htmlFor="username" className="text-sm font-medium">Юзернейм</label>
-                <Input
-                  id="username"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  required
-                  placeholder="Введите юзернейм"
-                />
-              </div>
-              <div className="space-y-2">
-                <label htmlFor="password" className="text-sm font-medium">Пароль</label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  placeholder="Введите пароль"
-                />
-              </div>
-            </CardContent>
-            <CardFooter>
-              <Button type="submit" className="w-full">
-                Войти
-              </Button>
-            </CardFooter>
-          </form>
-        </>
-      )}
+        <CardFooter>
+          <Button type="submit" className="w-full">
+            Войти
+          </Button>
+        </CardFooter>
+      </form>
     </Card>
   );
 }
