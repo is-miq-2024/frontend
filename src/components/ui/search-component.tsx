@@ -35,17 +35,19 @@ export default function SearchComponent() {
         lowerBound: Math.min(...rate),
         upperBound: Math.max(...rate)
       },
-      types: [getTravelType(travelType as 'beach' | 'mountain' | 'city' | 'adventure')]
+      types: ["WALKING"]
     }
 
     const userLogin = localStorage.getItem('userLogin');
     const userPassword = localStorage.getItem('userPassword');
     const credentials = btoa(`${userLogin}:${userPassword}`);
     console.log("Creds:", credentials)
+    console.log("Formdata:", formData)
     try {
-      const response = await fetch('http://193.32.178.205:8080/routes/search', {
+      const response = await fetch('http://193.32.178.205:8080/route/search', {
         method: 'POST',
         headers: {
+          //'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
           'Authorization': `Basic ${credentials}`,
         },
