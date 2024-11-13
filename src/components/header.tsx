@@ -21,7 +21,9 @@ function Header() {
                     <h3 className="text-2xl font-semibold tracking-tight">Travel</h3>
                 </div>
                 <div className="hidden lg:flex gap-x-4 items-end">
-                    <a className="leading-7 cursor-pointer">Создать маршрут</a>
+                    <a onClick={() => navigate("/create-route")} className="leading-7 cursor-pointer">
+                        Создать маршрут
+                    </a>
                     <a className="leading-7 cursor-pointer">Найти маршрут</a>
                     <a className="leading-7 cursor-pointer">Личный кабинет</a>
                 </div>
