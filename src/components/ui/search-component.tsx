@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from 'react'
-import { useUser } from '../UserContext'
 
 export default function SearchComponent() {
   const [destination, setDestination] = useState('')
@@ -27,7 +26,7 @@ export default function SearchComponent() {
       pageSize: 100,
       pageNumber: 0,
       title: destination,
-      durationInMinutes: getDurationBounds(duration),
+      durationInMinutes: getDurationBounds(duration as 'weekend' | 'week' | 'twoweeks' | 'month'),
       difficulty: {
         lowerBound: Math.min(...difficulty),
         upperBound: Math.max(...difficulty)
@@ -36,11 +35,9 @@ export default function SearchComponent() {
         lowerBound: Math.min(...rate),
         upperBound: Math.max(...rate)
       },
-      types: [getTravelType(travelType)]
+      types: [getTravelType(travelType as 'beach' | 'mountain' | 'city' | 'adventure')]
     }
 
-    //const { userLogin, userPassword, setUserLogin, setUserPassword } = useUser();
-    //const credentials = btoa(`${userLogin}:${userPassword}`);
     const userLogin = localStorage.getItem('userLogin');
     const userPassword = localStorage.getItem('userPassword');
     const credentials = btoa(`${userLogin}:${userPassword}`);
@@ -69,7 +66,7 @@ export default function SearchComponent() {
     }
   }
 
-  const getDurationBounds = (duration) => {
+  const getDurationBounds = (duration: 'weekend' | 'week' | 'twoweeks' | 'month') => {
     switch (duration) {
       case 'weekend':
         return { lowerBound: 0, upperBound: 2880 }
@@ -84,7 +81,7 @@ export default function SearchComponent() {
     }
   }
 
-  const getTravelType = (type) => {
+  const getTravelType = (type: 'beach' | 'mountain' | 'city' | 'adventure') => {
     switch (type) {
       case 'beach':
         return 'WALKING'
@@ -201,7 +198,7 @@ export default function SearchComponent() {
                   <div className="mt-2">
                     <strong className="text-sm">Рекомендации:</strong>
                     <ul className="list-disc list-inside text-sm">
-                      {result.recommendations.map((rec, index) => (
+                      {result.recommendations.map((rec: string, index: number) => (
                         <li key={index}>{rec}</li>
                       ))}
                     </ul>
