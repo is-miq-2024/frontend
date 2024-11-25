@@ -1,8 +1,8 @@
-import {useState} from "react";
-import {YMapsComponent} from "@/pages/CreateRoutePage.tsx";
-import {YMaps} from "@pbe/react-yandex-maps";
-import {useUser} from "@/components/UserContext.tsx";
-import {useNavigate} from "react-router-dom";
+import { useState } from "react";
+import { YMapsComponent } from "@/pages/CreateRoutePage";
+import { YMaps } from "@pbe/react-yandex-maps";
+import { useUser } from "@/components/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const DataForm = () => {
     const [title, setTitle] = useState('');
@@ -105,7 +105,7 @@ const DataForm = () => {
                     />
                 </div>
 
-                <YMaps query={{apikey: "8b56a857-f05f-4dc6-a91b-bc58f302ff21"}}><YMapsComponent setCoordinates={setCoordinates}/></YMaps>
+                <YMaps query={{ apikey: "8b56a857-f05f-4dc6-a91b-bc58f302ff21" }}><YMapsComponent setCoordinates={setCoordinates} /></YMaps>
 
                 <div className="mb-4">
                     <label className="block text-lg font-medium text-gray-700">Recommendations</label>
@@ -149,4 +149,4 @@ const DataForm = () => {
     );
 };
 
-export {DataForm}
+export { DataForm }

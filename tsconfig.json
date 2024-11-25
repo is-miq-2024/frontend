@@ -5,9 +5,17 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "target": "ES6",
+    "module": "CommonJS",  // Important for Jest
+    "moduleResolution": "node",
+    "esModuleInterop": true,  // Enable this flag
+    "strict": true,
+    "skipLibCheck": true,
+    "noImplicitAny": true
   }
 }
