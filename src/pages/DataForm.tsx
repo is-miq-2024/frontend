@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { YMapsComponent } from "@/pages/CreateRoutePage";
+import { Input } from "@/components/ui/input"
 import { YMaps } from "@pbe/react-yandex-maps";
 import { useUser } from "@/components/UserContext";
 import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const DataForm = () => {
     const [title, setTitle] = useState('');
@@ -81,70 +86,75 @@ const DataForm = () => {
 
     return (
         <div className="max-w-2xl mx-auto p-6 bg-gray rounded-lg shadow-md">
-            <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                    <label className="block text-lg font-medium text-gray-700">Title</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    />
-                </div>
-
-                <div className="mb-4">
-                    <label className="block text-lg font-medium text-gray-700">Description</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
-                        // @ts-ignore
-                        rows="4"
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    />
-                </div>
-
-                <YMaps query={{ apikey: "8b56a857-f05f-4dc6-a91b-bc58f302ff21" }}><YMapsComponent setCoordinates={setCoordinates} /></YMaps>
-
-                <div className="mb-4">
-                    <label className="block text-lg font-medium text-gray-700">Recommendations</label>
-                    {recommendations.map((recommendation, index) => (
-                        <div key={index} className="flex items-center space-x-4 mb-2">
-                            <input
+            <Card>
+                <CardHeader>
+                    <CardTitle>Создание маршрута</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <Label>Название</Label>
+                            <Input
                                 type="text"
-                                value={recommendation}
-                                onChange={(e) => handleRecommendationChange(index, e.target.value)}
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
                                 required
-                                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             />
-                            <button
-                                type="button"
-                                onClick={() => removeRecommendation(index)}
-                                className="text-blue-500 hover:text-red-700"
-                            >
-                                Remove
-                            </button>
                         </div>
-                    ))}
-                    <button
-                        type="button"
-                        onClick={addRecommendation}
-                        className="text-blue-500 hover:text-blue-700"
-                    >
-                        Add Recommendation
-                    </button>
-                </div>
 
-                <div className="flex justify-end">
-                    <button
-                        type="submit"
-                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                        Submit
-                    </button>
-                </div>
-            </form>
+                        <div className="mb-4">
+                            <Label>Описание</Label>
+                            <Textarea
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                                // @ts-ignore
+                                rows="4"
+                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+
+                        <YMaps query={{ apikey: "8b56a857-f05f-4dc6-a91b-bc58f302ff21" }}><YMapsComponent setCoordinates={setCoordinates} /></YMaps>
+
+                        <div className="mb-4">
+                            <Label>Рекомендации</Label>
+                            {recommendations.map((recommendation, index) => (
+                                <div key={index} className="flex items-center space-x-4 mb-2">
+                                    <Input
+                                        type="text"
+                                        value={recommendation}
+                                        onChange={(e) => handleRecommendationChange(index, e.target.value)}
+                                        required
+                                    />
+                                    <Button
+                                        type="button"
+                                        onClick={() => removeRecommendation(index)}
+                                        variant="destructive"
+                                    >
+                                        Remove
+                                    </Button>
+                                </div>
+                            ))}
+                            <Button
+                                type="button"
+                                onClick={addRecommendation}
+                                variant="outline"
+                            >
+                                Добавить рекомендацию
+                            </Button>
+                        </div>
+
+                        <div className="flex justify-end">
+                            <Button
+                                type="submit"
+                            >
+                                Создать
+                            </Button>
+                        </div>
+                    </form>
+                </CardContent>
+            </Card>
         </div>
     );
 };

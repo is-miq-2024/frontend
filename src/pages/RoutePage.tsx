@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { PageMap } from "@/components/PageMap";
 import { useNavigate, useParams } from "react-router-dom";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 // @ts-ignore
 const convertCoordinates = (data) => {
@@ -39,42 +40,40 @@ const RoutePage: FC = () => {
 
     return (<div>
         <button onClick={() => navigate('/')} style={{ margin: '16px' }}>Назад</button>
-        <div className="max-w-3xl mx-auto p-6 bg-gray-400 shadow-md rounded-lg mt-10">
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-800">Title:</h2>
-                <h1 className="text-3xl font-semibold text-blue-600">{route.title}</h1>
-            </div>
+        <Card>
 
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-800">Description:</h2>
-                <p className="text-gray-700">{route.description}</p>
-            </div>
+            <CardHeader>
+                <CardTitle>{route.title}</CardTitle>
+                <CardDescription>{route.description}</CardDescription>
+            </CardHeader>
 
-            <div className="mb-6">
+            <CardContent className="flex-grow">
                 <h2 className="text-lg font-semibold text-gray-800">Recommendations:</h2>
                 <ul className="list-disc list-inside text-gray-600">
                     {route.recommendations.map((rec: any, index: any) => (
                         <li key={index}>{rec}</li>
                     ))}
                 </ul>
-            </div>
+            </CardContent>
             <PageMap coordinates={convertCoordinates(route.points)} />
 
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-800">Duration:</h2>
-                <p className="text-gray-600">{route.durationInMinutes} minutes</p>
-            </div>
+            <CardFooter className="flex justify-between gap-2">
+                <div className="mb-6">
+                    <h2 className="text-lg font-semibold text-gray-800">Duration:</h2>
+                    <p className="text-gray-600">{route.durationInMinutes} minutes</p>
+                </div>
 
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-800">Difficulty:</h2>
-                <p className="text-gray-600">{route.difficulty}</p>
-            </div>
+                <div className="mb-6">
+                    <h2 className="text-lg font-semibold text-gray-800">Difficulty:</h2>
+                    <p className="text-gray-600">{route.difficulty}</p>
+                </div>
 
-            <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-800">Type:</h2>
-                <p className="text-gray-600">{route.types.join(', ')}</p>
-            </div>
-        </div>
+                <div className="mb-6">
+                    <h2 className="text-lg font-semibold text-gray-800">Type:</h2>
+                    <p className="text-gray-600">{route.types.join(', ')}</p>
+                </div>
+            </CardFooter>
+        </Card >
     </div>
     );
 };

@@ -1,4 +1,4 @@
-import { Search } from 'lucide-react'
+import { ChevronRight, Search, Star } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -19,7 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function SearchComponent() {
   const [destination, setDestination] = useState('')
@@ -29,6 +29,7 @@ export default function SearchComponent() {
   const [rate, setRate] = useState<number[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [searchResults, setSearchResults] = useState<any[]>([])
+  const [favorites, setFavorites] = useState<Set<string>>(new Set())
 
   const navigate = useNavigate();
 
@@ -47,8 +48,9 @@ export default function SearchComponent() {
         lowerBound: Math.min(...rate),
         upperBound: Math.max(...rate)
       },
-      types: ["WALKING"]
+      types: [getTravelType(travelType as 'walking' | 'cycling' | 'driving')]
     }
+
 
     const userLogin = localStorage.getItem('userLogin');
     const userPassword = localStorage.getItem('userPassword');
@@ -59,7 +61,6 @@ export default function SearchComponent() {
       const response = await fetch('http://193.32.178.205:8080/route/search', {
         method: 'POST',
         headers: {
-          //'Access-Control-Allow-Origin': '*',
           'Content-Type': 'application/json',
           'Authorization': `Basic ${credentials}`,
         },
@@ -80,35 +81,67 @@ export default function SearchComponent() {
     }
   }
 
+  const addToFavorite = async (routeId: string) => {
+    const userLogin = localStorage.getItem('userLogin');
+    const userPassword = localStorage.getItem('userPassword');
+    const creds = btoa(`${userLogin}:${userPassword}`);
+    console.log("creds:", creds)
+    if (userLogin === null) {
+      return
+    }
+    const url = `http://193.32.178.205:8080/users/addFavoriteRoute?routeId=${routeId}`;
+    console.log(url);
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${creds}`,
+        },
+        //body: null, // No body is necessary for this request
+        //body: JSON.stringify(""), // No body is necessary for this request
+        mode: 'cors',
+      });
+      if (response.ok) {
+        setFavorites(prev => new Set(prev).add(routeId));
+        console.log('Route added to favorites successfully');
+      } else {
+        console.log('Failed to add route to favorites', response.status, await response.text());
+      }
+    } catch (error) {
+      console.error('Error adding route to favorites:', error);
+    }
+  }
+
+
   const getDurationBounds = (duration: 'weekend' | 'week' | 'twoweeks' | 'month') => {
     switch (duration) {
       case 'weekend':
         return { lowerBound: 0, upperBound: 2880 }
       case 'week':
-        return { lowerBound: 2881, upperBound: 10080 }
+        return { lowerBound: 0, upperBound: 10080 }
       case 'twoweeks':
-        return { lowerBound: 10081, upperBound: 20160 }
+        return { lowerBound: 0, upperBound: 20160 }
       case 'month':
-        return { lowerBound: 20161, upperBound: 43200 }
+        return { lowerBound: 0, upperBound: 43200 }
       default:
         return { lowerBound: 0, upperBound: 43200 }
     }
   }
 
-  //const getTravelType = (type: 'beach' | 'mountain' | 'city' | 'adventure') => {
-  //  switch (type) {
-  //    case 'beach':
-  //      return 'WALKING'
-  //    case 'mountain':
-  //      return 'HIKING'
-  //    case 'city':
-  //      return 'WALKING'
-  //    case 'adventure':
-  //      return 'CYCLING'
-  //    default:
-  //      return 'WALKING'
-  //  }
-  //}
+  const getTravelType = (type: 'walking' | 'cycling' | 'driving') => {
+    switch (type) {
+      case 'walking':
+        return 'WALKING'
+      case 'cycling':
+        return 'CYCLING'
+      case 'driving':
+        return 'DRIVING'
+      default:
+        return 'WALKING'
+    }
+  }
 
   const handleCheckboxChange = (value: number, setter: React.Dispatch<React.SetStateAction<number[]>>) => {
     setter(prev =>
@@ -121,24 +154,14 @@ export default function SearchComponent() {
   return (
     <div className="w-full max-w-4xl mx-auto p-4 bg-white dark:bg-black rounded-lg shadow-md">
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="md:col-span-2">
-          <Input
-            type="text"
-            placeholder="Введите место назначения"
-            className="w-full"
-            value={destination}
-            onChange={(e) => setDestination(e.target.value)}
-          />
-        </div>
         <Select value={travelType} onValueChange={setTravelType}>
           <SelectTrigger>
             <SelectValue placeholder="Тип путешествия" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="beach">Пляжный отдых</SelectItem>
-            <SelectItem value="mountain">Горы</SelectItem>
-            <SelectItem value="city">Городской тур</SelectItem>
-            <SelectItem value="adventure">Приключения</SelectItem>
+            <SelectItem value="walking">Пешком</SelectItem>
+            <SelectItem value="cycling">На велосипеде</SelectItem>
+            <SelectItem value="driving">На машине</SelectItem>
           </SelectContent>
         </Select>
         <Select value={duration} onValueChange={setDuration}>
@@ -152,11 +175,15 @@ export default function SearchComponent() {
             <SelectItem value="month">Месяц</SelectItem>
           </SelectContent>
         </Select>
-        <div className="md:col-span-2">
-          <p className="mb-2">Сложность:</p>
-          <div className="flex flex-wrap gap-2">
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-              <label key={`difficulty-${value}`} className="flex items-center space-x-2">
+        <Select>
+          <SelectTrigger>
+            <SelectValue placeholder="Сложность" />
+          </SelectTrigger>
+          <SelectContent className='flex flex-col gap-2'>
+            {[0, 1, 2, 3, 4, 5].map((value) => (
+              <label key={`difficulty-${value}`}
+                className="flex items-center space-x-2"
+              >
                 <Checkbox
                   checked={difficulty.includes(value)}
                   onCheckedChange={() => handleCheckboxChange(value, setDifficulty)}
@@ -164,12 +191,14 @@ export default function SearchComponent() {
                 <span>{value}</span>
               </label>
             ))}
-          </div>
-        </div>
-        <div className="md:col-span-2">
-          <p className="mb-2">Рейтинг:</p>
-          <div className="flex flex-wrap gap-2">
-            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+          </SelectContent>
+        </Select>
+        <Select>
+          <SelectTrigger>
+            <SelectValue placeholder="Рейтинг" />
+          </SelectTrigger>
+          <SelectContent className='flex flex-col gap-2'>
+            {[0, 1, 2, 3, 4, 5].map((value) => (
               <label key={`rate-${value}`} className="flex items-center space-x-2">
                 <Checkbox
                   checked={rate.includes(value)}
@@ -178,8 +207,8 @@ export default function SearchComponent() {
                 <span>{value}</span>
               </label>
             ))}
-          </div>
-        </div>
+          </SelectContent>
+        </Select>
         <div className="md:col-span-4">
           <Button
             className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -207,11 +236,10 @@ export default function SearchComponent() {
                   <CardDescription>{result.description}</CardDescription>
                 </CardHeader>
                 <CardContent className="flex-grow">
-                  <div className="grid grid-cols-2 gap-2 mb-4">
+                  <div className="flex flex-col gap-2 mb-4">
                     <div className="text-sm"><strong>Длительность:</strong> {result.durationInMinutes} мин</div>
                     <div className="text-sm"><strong>Сложность:</strong> {result.difficulty}/10</div>
                     <div className="text-sm"><strong>Рейтинг:</strong> {result.rate.toFixed(1)}/10</div>
-                    <div className="text-sm"><strong>Тип:</strong> {result.types.join(', ')}</div>
                   </div>
                   {result.recommendations.length > 0 && (
                     <div>
@@ -224,14 +252,24 @@ export default function SearchComponent() {
                     </div>
                   )}
                 </CardContent>
-                <CardFooter className="flex justify-end">
+                <CardFooter className="flex justify-between gap-2">
                   <Badge variant="outline">{result.types[0]}</Badge>
+                  <Button size='icon' className='p-2'
+                    variant={favorites.has(result.id) ? "default" : "outline"}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToFavorite(result.id);
+                    }}
+                  >
+                    <Star />
+                  </Button>
                 </CardFooter>
               </Card>
             ))}
           </div>
         </div>
-      )}
-    </div>
+      )
+      }
+    </div >
   )
 }
