@@ -3,25 +3,25 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { useState } from 'react'
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
 } from "@/components/ui/card"
-import {useNavigate} from "react-router-dom";
-import {Rating} from "@/components/Rating.tsx";
-import {useUser} from "@/components/UserContext.tsx";
+import { useNavigate } from "react-router-dom";
+import { Rating } from "@/components/Rating.tsx";
+import { useUser } from "@/components/UserContext.tsx";
 
 export default function SearchComponent() {
     const [destination, setDestination] = useState('')
@@ -34,7 +34,7 @@ export default function SearchComponent() {
 
     const navigate = useNavigate();
 
-    const {userLogin, userPassword} = useUser();
+    const { userLogin, userPassword } = useUser();
 
     const username = userLogin;
     const password = userPassword;
@@ -56,7 +56,7 @@ export default function SearchComponent() {
                 lowerBound: Math.min(...rate),
                 upperBound: Math.max(...rate)
             },
-            types: ["WALKING"]
+            types: [getTravelType(travelType as 'walking' | 'cycling' | 'driving')]
         }
 
         const userLogin = localStorage.getItem('userLogin');
@@ -92,32 +92,30 @@ export default function SearchComponent() {
     const getDurationBounds = (duration: 'weekend' | 'week' | 'twoweeks' | 'month') => {
         switch (duration) {
             case 'weekend':
-                return {lowerBound: 0, upperBound: 2880}
+                return { lowerBound: 0, upperBound: 2880 }
             case 'week':
-                return {lowerBound: 2881, upperBound: 10080}
+                return { lowerBound: 0, upperBound: 10080 }
             case 'twoweeks':
-                return {lowerBound: 10081, upperBound: 20160}
+                return { lowerBound: 0, upperBound: 20160 }
             case 'month':
-                return {lowerBound: 20161, upperBound: 43200}
+                return { lowerBound: 0, upperBound: 43200 }
             default:
-                return {lowerBound: 0, upperBound: 43200}
+                return { lowerBound: 0, upperBound: 43200 }
         }
     }
 
-    //const getTravelType = (type: 'beach' | 'mountain' | 'city' | 'adventure') => {
-    //  switch (type) {
-    //    case 'beach':
-    //      return 'WALKING'
-    //    case 'mountain':
-    //      return 'HIKING'
-    //    case 'city':
-    //      return 'WALKING'
-    //    case 'adventure':
-    //      return 'CYCLING'
-    //    default:
-    //      return 'WALKING'
-    //  }
-    //}
+    const getTravelType = (type: 'walking' | 'cycling' | 'driving') => {
+        switch (type) {
+            case 'walking':
+                return 'WALKING'
+            case 'cycling':
+                return 'CYCLING'
+            case 'driving':
+                return 'DRIVING'
+            default:
+                return 'WALKING'
+        }
+    }
 
     const handleCheckboxChange = (value: number, setter: React.Dispatch<React.SetStateAction<number[]>>) => {
         setter(prev =>
@@ -128,7 +126,7 @@ export default function SearchComponent() {
     }
 
     // @ts-ignore
-    const handleSubmitReview = async ({rating, comment, id}) => {
+    const handleSubmitReview = async ({ rating, comment, id }) => {
         const formData = {
             routeId: id,
             text: comment,
@@ -161,29 +159,19 @@ export default function SearchComponent() {
     return (
         <div className="w-full max-w-4xl mx-auto p-4 bg-white dark:bg-black rounded-lg shadow-md">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <div className="md:col-span-2">
-                    <Input
-                        type="text"
-                        placeholder="Введите место назначения"
-                        className="w-full"
-                        value={destination}
-                        onChange={(e) => setDestination(e.target.value)}
-                    />
-                </div>
                 <Select value={travelType} onValueChange={setTravelType}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Тип путешествия"/>
+                        <SelectValue placeholder="Тип путешествия" />
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="beach">Пляжный отдых</SelectItem>
-                        <SelectItem value="mountain">Горы</SelectItem>
-                        <SelectItem value="city">Городской тур</SelectItem>
-                        <SelectItem value="adventure">Приключения</SelectItem>
+                        <SelectItem value="walking">Пешком</SelectItem>
+                        <SelectItem value="cycling">На велосипеде</SelectItem>
+                        <SelectItem value="driving">На машине</SelectItem>
                     </SelectContent>
                 </Select>
                 <Select value={duration} onValueChange={setDuration}>
                     <SelectTrigger>
-                        <SelectValue placeholder="Длительность"/>
+                        <SelectValue placeholder="Длительность" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="weekend">Выходные</SelectItem>
@@ -192,11 +180,15 @@ export default function SearchComponent() {
                         <SelectItem value="month">Месяц</SelectItem>
                     </SelectContent>
                 </Select>
-                <div className="md:col-span-2">
-                    <p className="mb-2">Сложность:</p>
-                    <div className="flex flex-wrap gap-2">
-                        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-                            <label key={`difficulty-${value}`} className="flex items-center space-x-2">
+                <Select>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Сложность" />
+                    </SelectTrigger>
+                    <SelectContent className='flex flex-col gap-2'>
+                        {[0, 1, 2, 3, 4, 5].map((value) => (
+                            <label key={`difficulty-${value}`}
+                                className="flex items-center space-x-2"
+                            >
                                 <Checkbox
                                     checked={difficulty.includes(value)}
                                     onCheckedChange={() => handleCheckboxChange(value, setDifficulty)}
@@ -204,11 +196,13 @@ export default function SearchComponent() {
                                 <span>{value}</span>
                             </label>
                         ))}
-                    </div>
-                </div>
-                <div className="md:col-span-2">
-                    <p className="mb-2">Рейтинг:</p>
-                    <div className="flex flex-wrap gap-2">
+                    </SelectContent>
+                </Select>
+                <Select>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Рейтинг" />
+                    </SelectTrigger>
+                    <SelectContent className='flex flex-col gap-2'>
                         {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
                             <label key={`rate-${value}`} className="flex items-center space-x-2">
                                 <Checkbox
@@ -218,8 +212,8 @@ export default function SearchComponent() {
                                 <span>{value}</span>
                             </label>
                         ))}
-                    </div>
-                </div>
+                    </SelectContent>
+                </Select>
                 <div className="md:col-span-4">
                     <Button
                         className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
@@ -230,7 +224,7 @@ export default function SearchComponent() {
                             'Поиск...'
                         ) : (
                             <>
-                                <Search className="mr-2 h-4 w-4"/> Поиск маршрутов
+                                <Search className="mr-2 h-4 w-4" /> Поиск маршрутов
                             </>
                         )}
                     </Button>
@@ -245,7 +239,7 @@ export default function SearchComponent() {
                                 <CardHeader>
                                     {result.author === username && (
                                         <button onClick={() => navigate(`/routeEdit/${result.id}`)}
-                                                className='self-end w-1/5'>Редактировать</button>)}
+                                            className='self-end w-1/5'>Редактировать</button>)}
 
                                     <CardTitle
                                         onClick={() => navigate(`/route/${result.id}`)}>{result.title}</CardTitle>
@@ -276,9 +270,9 @@ export default function SearchComponent() {
                                 <CardFooter className="flex justify-between">
                                     <Rating
                                         currentRating={result.userRating || 0}
-                                        onSubmitReview={({rating, comment}) => {
-                                            handleSubmitReview({rating, comment, id: result.id});
-                                        }}/>
+                                        onSubmitReview={({ rating, comment }) => {
+                                            handleSubmitReview({ rating, comment, id: result.id });
+                                        }} />
                                     <Badge variant="outline">{result.types[0]}</Badge>
                                 </CardFooter>
                             </Card>
