@@ -1,12 +1,29 @@
-import { useRef, useState} from "react";
+import {memo, useRef, useState} from "react";
 import {
     YMaps,
     Map,
     ZoomControl,
     SearchControl, Button
 } from "@pbe/react-yandex-maps";
+
+const areEqual = (prevProps, nextProps) => {
+    const {coordinates: prevCoordinates} = prevProps;
+    const {coordinates: nextCoordinates} = nextProps;
+
+    if (prevCoordinates?.length !== nextCoordinates?.length) {
+        return false;
+    }
+
+    // Сравниваем каждую пару координат
+    return prevCoordinates?.every(
+        ([prevLat, prevLng], index) =>
+            prevLat === nextCoordinates[index][0] && prevLng === nextCoordinates[index][1]
+    );
+};
+
+
 // @ts-ignore
-const YMapsComponent = ({setCoordinates}) => {
+const YMapsComponent = memo(({setCoordinates, setPathParams, setPathMapEditMode, coordinates = []}) => {
     const [ymaps, setYmaps] = useState(null);
     const routes = useRef(null);
     // @ts-ignore
@@ -15,7 +32,7 @@ const YMapsComponent = ({setCoordinates}) => {
             // @ts-ignore
             const multiRoute = new ymaps.multiRouter.MultiRoute(
                 {
-                    referencePoints: [],
+                    referencePoints: coordinates,
                     params: {
                         results: 2,
                         routingMode: "pedestrian"
@@ -42,7 +59,6 @@ const YMapsComponent = ({setCoordinates}) => {
         }[] = [];
         // @ts-ignore
         wayPoints.each(function (point) {
-            console.log(point.properties.get("coordinates"))
             dataWaypoints.push({
                 latitude: point.properties.get("coordinates")[1],
                 longitude: point.properties.get("coordinates")[0]
@@ -61,6 +77,15 @@ const YMapsComponent = ({setCoordinates}) => {
             // @ts-ignore
             routes.current.editor.stop();
             setCoordinates(dataWaypoints);
+            // @ts-ignore
+            setPathParams((prevState) => ({
+                ...prevState,
+                // @ts-ignore
+                durationInMinutes: Math.floor(routes.current.getActiveRoute()?.properties.get("duration").value / 60),
+            }))
+
+            // @ts-ignore
+            setPathMapEditMode((prev) => !prev);
 
         }
 
@@ -88,6 +113,6 @@ const YMapsComponent = ({setCoordinates}) => {
                 />
             </Map>
         </YMaps>);
-};
+}, areEqual);
 
 export {YMapsComponent};
