@@ -23,7 +23,7 @@ import { Rating } from "@/components/Rating.tsx";
 import { useUser } from "@/components/UserContext.tsx";
 
 export default function SearchComponent() {
-    const [destination, setDestination] = useState('')
+    const [destination, ] = useState('')
     const [travelType, setTravelType] = useState('')
     const [duration, setDuration] = useState('')
     const [difficulty, setDifficulty] = useState<number[]>([])
