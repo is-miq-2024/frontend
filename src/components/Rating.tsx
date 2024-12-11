@@ -1,10 +1,12 @@
-import {useState} from "react";
-import {Star} from "lucide-react";
+import { useState } from "react";
+import { Star } from "lucide-react";
+import { Button } from "./ui/button";
+import { Textarea } from "./ui/textarea";
 
 function Rating({
-                    currentRating,
-                    onSubmitReview,
-                }: {
+    currentRating,
+    onSubmitReview,
+}: {
     currentRating: number;
     onSubmitReview: (review: { rating: number; comment: string }) => void;
 }) {
@@ -15,7 +17,7 @@ function Rating({
 
     const handleSubmit = () => {
         if (rating && comment.trim()) {
-            onSubmitReview({rating, comment});
+            onSubmitReview({ rating, comment });
             setIsReviewing(false);
             setComment("");
             setRating(0); // Reset stars
@@ -30,11 +32,10 @@ function Rating({
                 {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                         key={star}
-                        className={`h-5 w-5 cursor-pointer ${
-                            (hoveredRating ?? rating) >= star
-                                ? "text-yellow-400"
-                                : "text-gray-300"
-                        }`}
+                        className={`h-5 w-5 cursor-pointer ${(hoveredRating ?? rating) >= star
+                            ? "text-yellow-400"
+                            : "text-gray-300"
+                            }`}
                         onMouseEnter={() => setHoveredRating(star)}
                         onMouseLeave={() => setHoveredRating(null)}
                         onClick={() => {
@@ -46,28 +47,27 @@ function Rating({
 
             {isReviewing ? (
                 <div className="flex flex-col space-y-2 w-full">
-                    <textarea
-                        placeholder="Write your comment here..."
+                    <Textarea
+                        placeholder="Комментарий"
                         value={comment}
                         onChange={(e) => setComment(e.target.value)}
                     />
-                    <button
-                        className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                    <Button
                         onClick={handleSubmit}
                     >
-                        Submit Review
-                    </button>
+                        Отправить
+                    </Button>
                 </div>
             ) : (
-                <button
-                    className="bg-secondary hover:bg-secondary/90 text-secondary-foreground"
+                <Button
+                    variant="outline"
                     onClick={() => setIsReviewing(true)}
                 >
                     Оставить отзыв
-                </button>
+                </Button>
             )}
         </div>
     );
 }
 
-export {Rating};
+export { Rating };

@@ -238,8 +238,11 @@ export default function SearchComponent() {
                             <Card key={result.id} className="flex flex-col">
                                 <CardHeader>
                                     {result.author === username && (
-                                        <button onClick={() => navigate(`/routeEdit/${result.id}`)}
-                                            className='self-end w-1/5'>Редактировать</button>)}
+                                        <Button onClick={() => navigate(`/routeEdit/${result.id}`)}
+                                            className='self-end w-1/5'>
+                                            Редактировать
+                                        </Button>
+                                    )}
 
                                     <CardTitle
                                         onClick={() => navigate(`/route/${result.id}`)}>{result.title}</CardTitle>

@@ -1,8 +1,13 @@
-import {useEffect, useState} from "react";
-import {useNavigate, useParams} from "react-router-dom";
-import {useUser} from "@/components/UserContext.tsx";
-import {YMaps} from "@pbe/react-yandex-maps";
-import {YMapsComponent} from "@/pages/CreateRoutePage.tsx";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useUser } from "@/components/UserContext.tsx";
+import { YMaps } from "@pbe/react-yandex-maps";
+import { YMapsComponent } from "@/pages/CreateRoutePage.tsx";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const PathEdit = () => {
     const [title, setTitle] = useState('');
@@ -14,16 +19,16 @@ const PathEdit = () => {
     }[]>([]);
     const [difficulty, setDifficulty] = useState<number>(1);
 
-    const [pathParams, setPathParams] = useState<{ durationInMinutes: number }>({durationInMinutes: 0});
+    const [pathParams, setPathParams] = useState<{ durationInMinutes: number }>({ durationInMinutes: 0 });
     const [pathMapEditMode, setPathMapEditMode] = useState<boolean>(true);
 
     const [route, setRoute] = useState<any>(null);
-    const {id} = useParams();
+    const { id } = useParams();
     const routeId = id;
 
     const navigate = useNavigate();
 
-    const {userLogin, userPassword} = useUser();
+    const { userLogin, userPassword } = useUser();
 
     const username = userLogin;
     const password = userPassword;
@@ -63,7 +68,7 @@ const PathEdit = () => {
             setDifficulty(route.difficulty);
             setRecommendations(route.recommendations);
             setCoordinates(route.points);
-            setPathParams((prevState) => ({...prevState, durationInMinutes: route.durationInMinutes}));
+            setPathParams((prevState) => ({ ...prevState, durationInMinutes: route.durationInMinutes }));
         }
     }, [route]);
 
@@ -131,135 +136,99 @@ const PathEdit = () => {
     console.log(route)
     return (
         <div className="max-w-2xl mx-auto p-6 bg-gray rounded-lg shadow-md">
-            <button onClick={() => navigate('/')} style={{margin: '16px'}}>Назад</button>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-4">
-                    <label className="block text-lg font-medium text-gray-700">Title</label>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    />
-                </div>
-
-                <div className="mb-4">
-                    <label className="block text-lg font-medium text-gray-700">Description</label>
-                    <textarea
-                        value={description}
-                        onChange={(e) => setDescription(e.target.value)}
-                        required
-                        // @ts-ignore
-                        rows="4"
-                        className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                    />
-
-                    <YMaps query={{apikey: "8b56a857-f05f-4dc6-a91b-bc58f302ff21"}}><YMapsComponent
-                        setPathMapEditMode={setPathMapEditMode} setPathParams={setPathParams}
-                        setCoordinates={setCoordinates}
-                        // @ts-ignore
-                        coordinates={coordinates?.map((item) => [item.latitude, item.longitude])}/></YMaps>
-
-                    <div className="mb-6 mt-4">
-                        <label className="block text-lg font-medium text-gray-700 mb-2">Difficulty (1-10)</label>
-                        <div className="flex items-center space-x-4">
-                            <span className="text-lg font-semibold text-gray-600">1</span>
-                            <input
-                                type="range"
-                                min={1}
-                                max={10}
-                                value={difficulty}
-                                onChange={(e) => setDifficulty(Number(e.target.value))}
-                                className="flex-grow h-4 appearance-none bg-blue-200 rounded-full outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer transition duration-200"
-                                style={{
-                                    accentColor: '#2563eb',
-                                    width: '100%',
-                                }}
-                            />
-                            <span className="text-lg font-semibold text-gray-600">10</span>
-                        </div>
-                        <div className="text-center mt-2">
-                            <span className="text-lg font-medium text-gray-700">Selected: {difficulty}</span>
-                        </div>
-                        <style>{`
-                        input[type="range"]::-webkit-slider-thumb {
-                            height: 24px;
-                            width: 24px;
-                            background-color: #2563eb; /* Tailwind's blue-600 */
-                            border-radius: 50%;
-                            border: 2px solid #ffffff; /* Белая окантовка */
-                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Легкая тень */
-                            cursor: pointer;
-                            appearance: none;
-                        }
-
-                        input[type="range"]::-moz-range-thumb {
-                            height: 24px;
-                            width: 24px;
-                            background-color: #2563eb;
-                            border-radius: 50%;
-                            border: 2px solid #ffffff;
-                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                            cursor: pointer;
-                        }
-
-                        input[type="range"]::-ms-thumb {
-                            height: 24px;
-                            width: 24px;
-                            background-color: #2563eb;
-                            border-radius: 50%;
-                            border: 2px solid #ffffff;
-                            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                            cursor: pointer;
-                        }
-                    `}</style>
-                    </div>
-                </div>
-
-                <div className="mb-4">
-                    <label className="block text-lg font-medium text-gray-700">Recommendations</label>
-                    {recommendations.map((recommendation, index) => (
-                        <div key={index} className="flex items-center space-x-4 mb-2">
-                            <input
+            <Button onClick={() => navigate('/')} style={{ margin: '16px' }}>Назад</Button>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Редактирование маршрута</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <Label>Название</Label>
+                            <Input
                                 type="text"
-                                value={recommendation}
-                                onChange={(e) => handleRecommendationChange(index, e.target.value)}
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
                                 required
-                                className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             />
-                            <button
-                                type="button"
-                                onClick={() => removeRecommendation(index)}
-                                className="text-blue-500 hover:text-red-700"
-                            >
-                                Remove
-                            </button>
                         </div>
-                    ))}
-                    <button
-                        type="button"
-                        onClick={addRecommendation}
-                        className="text-blue-500 hover:text-blue-700"
-                    >
-                        Add Recommendation
-                    </button>
-                </div>
 
-                <div className="flex justify-end">
-                    <button
-                        type="submit"
-                        className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                        Submit
-                    </button>
-                </div>
+                        <div className="mb-4">
+                            <Label>Описание</Label>
+                            <Textarea
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                            />
 
-            </form>
+                            <YMaps query={{ apikey: "8b56a857-f05f-4dc6-a91b-bc58f302ff21" }}><YMapsComponent
+                                setPathMapEditMode={setPathMapEditMode} setPathParams={setPathParams}
+                                setCoordinates={setCoordinates}
+                                // @ts-ignore
+                                coordinates={coordinates?.map((item) => [item.latitude, item.longitude])} /></YMaps>
+
+                            <div className="mb-6 mt-4">
+                                <Label>Сложность</Label>
+                                <div className="flex items-center space-x-4">
+                                    <span className="text-lg font-semibold text-gray-600">1</span>
+                                    <Input
+                                        type="range"
+                                        min={1}
+                                        max={10}
+                                        value={difficulty}
+                                        onChange={(e) => setDifficulty(Number(e.target.value))}
+                                    />
+                                    <span className="text-lg font-semibold text-gray-600">10</span>
+                                </div>
+                                <div className="text-center mt-2">
+                                    <p className="text-sm text-muted-foreground">Выбрано: {difficulty}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mb-4">
+                            <Label>Рекомендации</Label>
+                            {recommendations.map((recommendation, index) => (
+                                <div key={index} className="flex items-center space-x-4 mb-2">
+                                    <Input
+                                        type="text"
+                                        value={recommendation}
+                                        onChange={(e) => handleRecommendationChange(index, e.target.value)}
+                                        required
+                                    />
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        onClick={() => removeRecommendation(index)}
+                                    >
+                                        Remove
+                                    </Button>
+                                </div>
+                            ))}
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={addRecommendation}
+                            >
+                                +
+                            </Button>
+                        </div>
+
+                        <div className="flex justify-end">
+                            <Button
+                                type="submit"
+                            >
+                                Сохранить изменения
+                            </Button>
+                        </div>
+
+                    </form>
+                </CardContent>
+            </Card>
         </div>
 
     );
 
 }
 
-export {PathEdit};
+export { PathEdit };

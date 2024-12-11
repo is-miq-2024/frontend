@@ -1,8 +1,10 @@
-import {FC, useEffect, useState} from "react";
-import {PageMap} from "@/components/PageMap";
-import {useNavigate, useParams} from "react-router-dom";
-import {useUser} from "@/components/UserContext.tsx";
-import {Star} from "lucide-react";
+import { FC, useEffect, useState } from "react";
+import { PageMap } from "@/components/PageMap";
+import { useNavigate, useParams } from "react-router-dom";
+import { useUser } from "@/components/UserContext.tsx";
+import { Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 // @ts-ignore
 const convertCoordinates = (data) => {
@@ -13,12 +15,12 @@ const convertCoordinates = (data) => {
 // @ts-ignore
 const RoutePage: FC = () => {
     const [route, setRoute] = useState<any>(null);
-    const {id} = useParams();
+    const { id } = useParams();
     const routeId = id;
 
     const navigate = useNavigate();
 
-    const {userLogin, userPassword} = useUser();
+    const { userLogin, userPassword } = useUser();
 
     const username = userLogin;
     const password = userPassword;
@@ -56,67 +58,88 @@ const RoutePage: FC = () => {
 
     console.log(route)
 
-    return (<div>
-            <button onClick={() => navigate('/')} style={{margin: '16px'}}>Назад</button>
-            <div className="max-w-3xl mx-auto p-6 bg-gray-400 shadow-md rounded-lg mt-10">
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-800">Title:</h2>
-                    <h1 className="text-3xl font-semibold text-blue-600">{route.title}</h1>
-                </div>
+    return (
+        <div>
+            <Button onClick={() => navigate('/')} className="mt-4 ml-4">Назад</Button>
+            <Card className="max-w-3xl mx-auto p-6 shadow-md rounded-lg mt-10">
+                <CardHeader>
+                    <CardTitle>Информация о маршруте</CardTitle>
+                </CardHeader>
+                <h2 className="scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0">
+                    {route.title}
+                </h2>
 
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-800">Description:</h2>
-                    <p className="text-gray-700">{route.description}</p>
-                </div>
+                <p className="leading-7 font-semibold mt-4">
+                    Описание:
+                </p>
+                <p className="leading-7">
+                    {route.description}
+                </p>
 
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-800">Recommendations:</h2>
-                    <ul className="list-disc list-inside text-gray-600">
-                        {route.recommendations.map((rec: any, index: any) => (
-                            <li key={index}>{rec}</li>
-                        ))}
-                    </ul>
-                </div>
-                <PageMap coordinates={convertCoordinates(route.points)}/>
+                <p className="leading-7 font-semibold mt-4">
+                    Рекомендации:
+                </p>
+                <ul className="ml-6 mb-4 list-disc">
+                    {route.recommendations.map((rec: any, index: any) => (
+                        <li key={index}>{rec}</li>
+                    ))}
+                </ul>
 
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-800">Duration:</h2>
-                    <p className="text-gray-600">{route.durationInMinutes} minutes</p>
-                </div>
+                <PageMap coordinates={convertCoordinates(route.points)} />
 
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-800">Difficulty:</h2>
-                    <p className="text-gray-600">{route.difficulty}</p>
-                </div>
+                <p className="leading-7 font-semibold mt-4">
+                    Продолжительность:
+                </p>
+                <p className="leading-7">
+                    {route.durationInMinutes} минут
+                </p>
 
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-800">Type:</h2>
-                    <p className="text-gray-600">{route.types.join(', ')}</p>
-                </div>
+                <p className="leading-7 font-semibold mt-4">
+                    Сложность:
+                </p>
+                <p className="leading-7">
+                    {route.difficulty}
+                </p>
 
-                {route.comments.length > 0 && (
-                    <div className="mt-4">
-                        <h3 className="text-lg font-semibold">Reviews:</h3>
-                        <ul className="space-y-2">
-                            {route.comments.map((review, index) => (
-                                <li key={index} className="border-b pb-2">
-                                    <div className="flex items-center space-x-2">
-                                        {[...Array(5)].map((_, i) => (
-                                            <Star
-                                                key={i}
-                                                className={`h-4 w-4 ${i < review.rate ? "text-yellow-400" : "text-gray-300"}`}
-                                            />
-                                        ))}
-                                    </div>
-                                    <p className="text-gray-700">{review.text}</p>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-            </div>
-        </div>
+                <p className="leading-7 font-semibold mt-4">
+                    Тип маршрута:
+                </p>
+                <p className="leading-7">
+                    {route.types.join(', ')}
+                </p>
+
+
+
+                {
+                    route.comments.length > 0 && (
+                        <div className="mt-4">
+                            <h4 className="scroll-m-20 mb-4 text-md font-semibold tracking-tight">
+                                Отзывы</h4>
+                            <ul className="space-y-2">
+                                {route.comments.map((review, index) => (
+                                    <li key={index} className="pb-2">
+                                        <Card className="flex flex-col items-left">
+                                            <CardContent>
+                                                <div className="flex flex-row mt-5">
+                                                    {[...Array(5)].map((_, i) => (
+                                                        <Star
+                                                            key={i}
+                                                            className={`h-4 w-4 ${i < review.rate ? "text-yellow-400" : "text-gray-300"}`}
+                                                        />
+                                                    ))}
+                                                </div>
+                                                <p className="text-gray-700">{review.text}</p>
+                                            </CardContent>
+                                        </Card>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )
+                }
+            </Card >
+        </div >
     );
 };
 
-export {RoutePage};
+export { RoutePage };
