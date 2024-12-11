@@ -19,8 +19,17 @@ const RoutePage: FC = () => {
 
     useEffect(() => {
         const fetchRouteData = async () => {
+            const userLogin = localStorage.getItem('userLogin');
+            const userPassword = localStorage.getItem('userPassword');
+            const credentials = btoa(`${userLogin}:${userPassword}`);
             try {
-                const response = await fetch(`http://193.32.178.205:8080/route/${routeId}`);
+                const response = await fetch(`http://193.32.178.205:8080/route/${routeId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Basic ${credentials}`,
+                    },
+                })
                 if (!response.ok) {
                     throw new Error('Failed to fetch route data');
                 }
@@ -38,43 +47,55 @@ const RoutePage: FC = () => {
         return <div className="text-center text-gray-500">Loading...</div>;
     }
 
-    return (<div>
-        <button onClick={() => navigate('/')} style={{ margin: '16px' }}>Назад</button>
-        <Card>
+    return (
+        <div className="max-w-2xl mx-auto p-6 bg-gray rounded-lg shadow-md">
+            <button onClick={() => navigate('/')} style={{ margin: '16px' }}>Назад</button>
+            <Card>
 
-            <CardHeader>
-                <CardTitle>{route.title}</CardTitle>
-                <CardDescription>{route.description}</CardDescription>
-            </CardHeader>
+                <CardHeader>
+                    <CardTitle>{route.title}</CardTitle>
+                    <CardDescription>{route.description}</CardDescription>
+                </CardHeader>
 
-            <CardContent className="flex-grow">
-                <h2 className="text-lg font-semibold text-gray-800">Recommendations:</h2>
-                <ul className="list-disc list-inside text-gray-600">
-                    {route.recommendations.map((rec: any, index: any) => (
-                        <li key={index}>{rec}</li>
-                    ))}
-                </ul>
-            </CardContent>
-            <PageMap coordinates={convertCoordinates(route.points)} />
+                <CardContent className="flex-grow">
+                    <h2 className="text-lg font-semibold text-gray-800">Recommendations:</h2>
+                    <ul className="list-disc list-inside text-gray-600">
+                        {route.recommendations.map((rec: any, index: any) => (
+                            <li key={index}>{rec}</li>
+                        ))}
+                    </ul>
+                </CardContent>
+                <PageMap coordinates={convertCoordinates(route.points)} />
 
-            <CardFooter className="flex justify-between gap-2">
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-800">Duration:</h2>
-                    <p className="text-gray-600">{route.durationInMinutes} minutes</p>
-                </div>
+                <CardFooter className="flex flex-col items-start sm:flex-row sm:justify-between gap-2">
+                    <div className="mb-6">
+                        <h2 className="scroll-m-20 border-b text-lg font-semibold tracking-tight first:mt-0">
+                            Продолжительность
+                        </h2>
+                        <p className="leading-7">
+                            {route.durationInMinutes} минут
+                        </p>
+                    </div>
 
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-800">Difficulty:</h2>
-                    <p className="text-gray-600">{route.difficulty}</p>
-                </div>
+                    <div className="mb-6">
+                        <h2 className="scroll-m-20 border-b text-lg font-semibold tracking-tight first:mt-0">
+                            Сложность</h2>
+                        <p className="leading-7">
+                            {route.difficulty}
+                        </p>
+                    </div>
 
-                <div className="mb-6">
-                    <h2 className="text-lg font-semibold text-gray-800">Type:</h2>
-                    <p className="text-gray-600">{route.types.join(', ')}</p>
-                </div>
-            </CardFooter>
-        </Card >
-    </div>
+                    <div className="mb-6">
+                        <h2 className="scroll-m-20 border-b text-lg font-semibold tracking-tight first:mt-0">
+                            Тип
+                        </h2>
+                        <p className="leading-7">
+                            {route.types.join(', ')}
+                        </p>
+                    </div>
+                </CardFooter>
+            </Card >
+        </div >
     );
 };
 

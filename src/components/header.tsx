@@ -25,7 +25,7 @@ function Header() {
                         Создать маршрут
                     </a>
                     <a className="leading-7 cursor-pointer">Найти маршрут</a>
-                    <a className="leading-7 cursor-pointer">Личный кабинет</a>
+                    <Fragment><a onClick={() => navigate("/profile")} className="leading-7 cursor-pointer">Личный кабинет</a></Fragment>
                 </div>
             </div>
 

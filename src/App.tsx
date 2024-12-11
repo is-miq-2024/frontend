@@ -6,6 +6,7 @@ import SearchSection from './components/search-section'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { DataForm } from "@/pages/DataForm";
 import { RoutePage } from "@/pages/RoutePage";
+import ProfilePage from './pages/ProfilePage'
 
 
 function HomePage() {
@@ -39,6 +40,7 @@ function App() {
                 }}><RegisterPage /></div>} />
                 <Route path="/create-route" element={<DataForm />} />
                 <Route path="/route/:id" element={<RoutePage />} />
+                <Route path="/profile" element={<ProfilePage />} />
             </Routes>
         </Router>
     );

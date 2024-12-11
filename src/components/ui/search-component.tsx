@@ -1,4 +1,4 @@
-import { ChevronRight, Search, Star } from 'lucide-react'
+import { Check, ChevronRight, Search, Star } from 'lucide-react'
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -30,6 +30,7 @@ export default function SearchComponent() {
   const [isLoading, setIsLoading] = useState(false)
   const [searchResults, setSearchResults] = useState<any[]>([])
   const [favorites, setFavorites] = useState<Set<string>>(new Set())
+  const [completedRoutes, setCompletedRoutes] = useState<Set<string>>(new Set())
 
   const navigate = useNavigate();
 
@@ -52,6 +53,7 @@ export default function SearchComponent() {
     }
 
 
+    console.log(JSON.stringify(formData))
     const userLogin = localStorage.getItem('userLogin');
     const userPassword = localStorage.getItem('userPassword');
     const credentials = btoa(`${userLogin}:${userPassword}`);
@@ -84,24 +86,20 @@ export default function SearchComponent() {
   const addToFavorite = async (routeId: string) => {
     const userLogin = localStorage.getItem('userLogin');
     const userPassword = localStorage.getItem('userPassword');
-    const creds = btoa(`${userLogin}:${userPassword}`);
-    console.log("creds:", creds)
+    const credentials = btoa(`${userLogin}:${userPassword}`);
     if (userLogin === null) {
       return
     }
-    const url = `http://193.32.178.205:8080/users/addFavoriteRoute?routeId=${routeId}`;
+    const url = `http://193.32.178.205:8080/users/addFavoriteRoute/${routeId}`;
     console.log(url);
-
     try {
       const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Basic ${creds}`,
+          //'Authorization': `Basic ${credentials}`,
         },
-        //body: null, // No body is necessary for this request
-        //body: JSON.stringify(""), // No body is necessary for this request
-        mode: 'cors',
+        //mode: 'cors',
       });
       if (response.ok) {
         setFavorites(prev => new Set(prev).add(routeId));
@@ -114,6 +112,36 @@ export default function SearchComponent() {
     }
   }
 
+  const addToDone = async (routeId: string) => {
+    const userLogin = localStorage.getItem('userLogin');
+    const userPassword = localStorage.getItem('userPassword');
+    const credentials = btoa(`${userLogin}:${userPassword}`);
+    if (userLogin === null) {
+      return
+    }
+    const url = `http://193.32.178.205:8080/users/addCompletedRoute/${routeId}`;
+    console.log(url);
+    console.log(credentials);
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${credentials}`,
+        },
+        mode: 'cors',
+      });
+      if (response.ok) {
+        setCompletedRoutes(prev => new Set(prev).add(routeId));
+        console.log('Route added to completed successfully');
+      } else {
+        console.log('Failed to add route to completed', response.status, await response.text());
+      }
+    } catch (error) {
+      console.error('Error adding route to completed:', error);
+    }
+  }
 
   const getDurationBounds = (duration: 'weekend' | 'week' | 'twoweeks' | 'month') => {
     switch (duration) {
@@ -253,16 +281,29 @@ export default function SearchComponent() {
                   )}
                 </CardContent>
                 <CardFooter className="flex justify-between gap-2">
-                  <Badge variant="outline">{result.types[0]}</Badge>
-                  <Button size='icon' className='p-2'
-                    variant={favorites.has(result.id) ? "default" : "outline"}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      addToFavorite(result.id);
-                    }}
-                  >
-                    <Star />
-                  </Button>
+                  <div>
+                    <Badge variant="outline">{result.types[0]}</Badge>
+                  </div>
+                  <div className='flex flew-row gap-2'>
+                    <Button size='icon' className='p-2'
+                      variant={favorites.has(result.id) ? "default" : "outline"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToFavorite(result.id);
+                      }}
+                    >
+                      <Star />
+                    </Button>
+                    <Button size='icon' className='p-2'
+                      variant={completedRoutes.has(result.id) ? "default" : "outline"}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addToDone(result.id);
+                      }}
+                    >
+                      <Check />
+                    </Button>
+                  </div>
                 </CardFooter>
               </Card>
             ))}
