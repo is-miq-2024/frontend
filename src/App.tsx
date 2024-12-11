@@ -6,12 +6,12 @@ import SearchSection from './components/search-section'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { DataForm } from "@/pages/DataForm";
 import { RoutePage } from "@/pages/RoutePage";
-import {PathEdit} from "@/pages/PathEdit.tsx";
+import { PathEdit } from "@/pages/PathEdit.tsx";
 
 
 function HomePage() {
     return (
-        <div className="min-w-full min-h-[100dvh] flex flex-col items-center bg-white dark:bg-black">
+        <div className="min-w-full min-h-[100dvh] flex flex-col items-center bg-white dark:bg-black mb-96">
             <Header />
             <Hero />
             <SearchSection />
