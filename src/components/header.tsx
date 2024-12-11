@@ -24,8 +24,6 @@ function Header() {
                     <a onClick={() => navigate("/create-route")} className="leading-7 cursor-pointer">
                         Создать маршрут
                     </a>
-                    <a className="leading-7 cursor-pointer">Найти маршрут</a>
-                    <a className="leading-7 cursor-pointer">Личный кабинет</a>
                 </div>
             </div>
 
