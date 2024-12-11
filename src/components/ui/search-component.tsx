@@ -202,7 +202,7 @@ export default function SearchComponent() {
                         <SelectValue placeholder="Рейтинг" />
                     </SelectTrigger>
                     <SelectContent className='flex flex-col gap-2'>
-                        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+                        {[0, 1, 2, 3, 4, 5].map((value) => (
                             <label key={`rate-${value}`} className="flex items-center space-x-2">
                                 <Checkbox
                                     checked={rate.includes(value)}
@@ -254,7 +254,7 @@ export default function SearchComponent() {
                                         </div>
                                         <div className="text-sm"><strong>Сложность:</strong> {result.difficulty}/10
                                         </div>
-                                        <div className="text-sm"><strong>Рейтинг:</strong> {result.rate.toFixed(1)}/10
+                                        <div className="text-sm"><strong>Рейтинг:</strong> {result.rate.toFixed(1)}/5
                                         </div>
                                         <div className="text-sm"><strong>Тип:</strong> {result.types.join(', ')}</div>
                                     </div>
