@@ -28,7 +28,6 @@ function Header() {
             </div>
 
             <div className="flex gap-4 items-center">
-                <Input placeholder="Поиск" className="hidden lg:block" />
                 {isAuth ? (<LogoutButton />) : (
                     <Fragment><Button onClick={() => navigate("/login")}>Вход</Button><Button
                         onClick={() => navigate("/registration")}>Регистрация</Button></Fragment>)}
