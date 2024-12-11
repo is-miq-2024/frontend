@@ -5,7 +5,7 @@ import {
     ZoomControl,
     SearchControl, Button
 } from "@pbe/react-yandex-maps";
-
+// @ts-ignore
 const areEqual = (prevProps, nextProps) => {
     const {coordinates: prevCoordinates} = prevProps;
     const {coordinates: nextCoordinates} = nextProps;
@@ -16,6 +16,7 @@ const areEqual = (prevProps, nextProps) => {
 
     // Сравниваем каждую пару координат
     return prevCoordinates?.every(
+        // @ts-ignore
         ([prevLat, prevLng], index) =>
             prevLat === nextCoordinates[index][0] && prevLng === nextCoordinates[index][1]
     );

@@ -108,15 +108,14 @@ const RoutePage: FC = () => {
                     {route.types.join(', ')}
                 </p>
 
-
-
                 {
                     route.comments.length > 0 && (
                         <div className="mt-4">
                             <h4 className="scroll-m-20 mb-4 text-md font-semibold tracking-tight">
                                 Отзывы</h4>
                             <ul className="space-y-2">
-                                {route.comments.map((review, index) => (
+
+                                {route.comments.map((review: any, index: any) => (
                                     <li key={index} className="pb-2">
                                         <Card className="flex flex-col items-left">
                                             <CardContent>

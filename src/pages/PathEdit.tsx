@@ -20,7 +20,7 @@ const PathEdit = () => {
     const [difficulty, setDifficulty] = useState<number>(1);
 
     const [pathParams, setPathParams] = useState<{ durationInMinutes: number }>({ durationInMinutes: 0 });
-    const [pathMapEditMode, setPathMapEditMode] = useState<boolean>(true);
+    const [, setPathMapEditMode] = useState<boolean>(true);
 
     const [route, setRoute] = useState<any>(null);
     const { id } = useParams();
@@ -133,7 +133,7 @@ const PathEdit = () => {
             alert('Error submitting data');
         }
     };
-    console.log(route)
+
     return (
         <div className="max-w-2xl mx-auto p-6 bg-gray rounded-lg shadow-md">
             <Button onClick={() => navigate('/')} style={{ margin: '16px' }}>Назад</Button>
@@ -162,6 +162,7 @@ const PathEdit = () => {
                             />
 
                             <YMaps query={{ apikey: "8b56a857-f05f-4dc6-a91b-bc58f302ff21" }}><YMapsComponent
+                                // @ts-ignore
                                 setPathMapEditMode={setPathMapEditMode} setPathParams={setPathParams}
                                 setCoordinates={setCoordinates}
                                 // @ts-ignore

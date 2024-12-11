@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { YMapsComponent } from "@/pages/CreateRoutePage";
-import { YMaps } from "@pbe/react-yandex-maps";
-import { useUser } from "@/components/UserContext";
-import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import {useState} from "react";
+import {YMapsComponent} from "@/pages/CreateRoutePage";
+import {YMaps} from "@pbe/react-yandex-maps";
+import {useUser} from "@/components/UserContext";
+import {useNavigate} from "react-router-dom";
+import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
+import {Label} from "@/components/ui/label";
+import {Textarea} from "@/components/ui/textarea";
+import {Input} from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
 
 const DataForm = () => {
     const [title, setTitle] = useState('');
@@ -19,13 +19,13 @@ const DataForm = () => {
     }[]>([]);
     const [difficulty, setDifficulty] = useState<number>(1);
 
-    const [pathParams, setPathParams] = useState<{ durationInMinutes: number }>({ durationInMinutes: 0 });
+    const [pathParams, setPathParams] = useState<{ durationInMinutes: number }>({durationInMinutes: 0});
     const [pathMapEditMode, setPathMapEditMode] = useState<boolean>(true);
 
 
     const navigate = useNavigate();
 
-    const { userLogin, userPassword } = useUser();
+    const {userLogin, userPassword} = useUser();
 
     const username = userLogin;
     const password = userPassword;
@@ -87,61 +87,64 @@ const DataForm = () => {
 
     return (<div className="max-w-2xl mx-auto p-6 bg-gray rounded-lg shadow-md">
 
-        <Card>
-            <CardHeader>
-                <CardTitle>Создание маршрута</CardTitle>
-            </CardHeader>
-            <CardContent>
-                <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <Label className="block text-lg font-medium text-gray-700">Название</Label>
-                        <Input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            required
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-
-                    <div className="mb-4">
-                        <Label>Описание</Label>
-                        <Textarea
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                            required
-                            // @ts-ignore
-                            rows="4"
-                            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        />
-                    </div>
-
-                    <YMaps query={{ apikey: "8b56a857-f05f-4dc6-a91b-bc58f302ff21" }}>
-                        <YMapsComponent setPathMapEditMode={setPathMapEditMode} setPathParams={setPathParams} setCoordinates={setCoordinates} />
-                    </YMaps>
-
-                    <div className="mb-6 mt-4">
-                        <Label>Сложность</Label>
-                        <div className="flex items-center space-x-4">
-                            <span className="text-lg font-semibold text-gray-600">1</span>
+            <Card>
+                <CardHeader>
+                    <CardTitle>Создание маршрута</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-4">
+                            <Label className="block text-lg font-medium text-gray-700">Название</Label>
                             <Input
-                                type="range"
-                                min={1}
-                                max={10}
-                                value={difficulty}
-                                onChange={(e) => setDifficulty(Number(e.target.value))}
-                                className="flex-grow h-4 appearance-none bg-blue-200 rounded-full outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer transition duration-200"
-                                style={{
-                                    accentColor: '#2563eb',
-                                    width: '100%',
-                                }}
+                                type="text"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                required
+                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             />
-                            <span className="text-lg font-semibold text-gray-600">10</span>
                         </div>
-                        <div className="text-center mt-2">
-                            <span className="text-lg font-medium text-gray-700">Selected: {difficulty}</span>
+
+                        <div className="mb-4">
+                            <Label>Описание</Label>
+                            <Textarea
+                                value={description}
+                                onChange={(e) => setDescription(e.target.value)}
+                                required
+                                // @ts-ignore
+                                rows="4"
+                                className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            />
                         </div>
-                        <style>{`
+
+                        <YMaps query={{apikey: "8b56a857-f05f-4dc6-a91b-bc58f302ff21"}}>
+                            <YMapsComponent
+                                // @ts-ignore
+                                setPathMapEditMode={setPathMapEditMode} setPathParams={setPathParams}
+                                            setCoordinates={setCoordinates}/>
+                        </YMaps>
+
+                        <div className="mb-6 mt-4">
+                            <Label>Сложность</Label>
+                            <div className="flex items-center space-x-4">
+                                <span className="text-lg font-semibold text-gray-600">1</span>
+                                <Input
+                                    type="range"
+                                    min={1}
+                                    max={10}
+                                    value={difficulty}
+                                    onChange={(e) => setDifficulty(Number(e.target.value))}
+                                    className="flex-grow h-4 appearance-none bg-blue-200 rounded-full outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer transition duration-200"
+                                    style={{
+                                        accentColor: '#2563eb',
+                                        width: '100%',
+                                    }}
+                                />
+                                <span className="text-lg font-semibold text-gray-600">10</span>
+                            </div>
+                            <div className="text-center mt-2">
+                                <span className="text-lg font-medium text-gray-700">Selected: {difficulty}</span>
+                            </div>
+                            <style>{`
                         input[type="range"]::-webkit-slider-thumb {
                             height: 24px;
                             width: 24px;
@@ -173,45 +176,45 @@ const DataForm = () => {
                             cursor: pointer;
                         }
                     `}</style>
-                    </div>
+                        </div>
 
-                    <div className="mb-4">
-                        <Label>Рекомендации</Label>
-                        {recommendations.map((recommendation, index) => (
-                            <div key={index} className="flex items-center space-x-4 mb-2">
-                                <Input
-                                    type="text"
-                                    value={recommendation}
-                                    onChange={(e) => handleRecommendationChange(index, e.target.value)}
-                                    required
-                                />
-                                <Button
-                                    variant="destructive"
-                                    onClick={() => removeRecommendation(index)}
-                                >
-                                    Удалить
-                                </Button>
-                            </div>
-                        ))}
-                        <Button
-                            onClick={addRecommendation}
-                        >
-                            Добавить
-                        </Button>
-                    </div>
+                        <div className="mb-4">
+                            <Label>Рекомендации</Label>
+                            {recommendations.map((recommendation, index) => (
+                                <div key={index} className="flex items-center space-x-4 mb-2">
+                                    <Input
+                                        type="text"
+                                        value={recommendation}
+                                        onChange={(e) => handleRecommendationChange(index, e.target.value)}
+                                        required
+                                    />
+                                    <Button
+                                        variant="destructive"
+                                        onClick={() => removeRecommendation(index)}
+                                    >
+                                        Удалить
+                                    </Button>
+                                </div>
+                            ))}
+                            <Button
+                                onClick={addRecommendation}
+                            >
+                                Добавить
+                            </Button>
+                        </div>
 
-                    <div className="flex justify-end">
-                        <Button
-                            disabled={pathMapEditMode}
-                        >
-                            Создать
-                        </Button>
-                    </div>
-                </form>
-            </CardContent>
-        </Card>
-    </div>
+                        <div className="flex justify-end">
+                            <Button
+                                disabled={pathMapEditMode}
+                            >
+                                Создать
+                            </Button>
+                        </div>
+                    </form>
+                </CardContent>
+            </Card>
+        </div>
     );
 };
 
-export { DataForm }
+export {DataForm}

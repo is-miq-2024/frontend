@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button"
-import { Input } from "./ui/input"
 import { MapPin } from "lucide-react"
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/components/UserContext";
